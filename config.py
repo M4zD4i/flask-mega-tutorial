@@ -15,3 +15,5 @@ class Config(object):
     ADMINS = ['flask-mega-tutor@example.com']
 
     POSTS_PER_PAGE = 3
+
+    LANGUAGES = ['en', 'ru']
