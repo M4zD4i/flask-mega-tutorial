@@ -76,18 +76,6 @@ class User(UserMixin, db.Model):
         return User.query.get(id)
 
 
-class Post(SearchableMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    language = db.Column(db.String(5))
-
-    __searchable__ = ['body']
-
-    def __repr__(self):
-        return '<Post {}>'.format(self.body)
-
 class SearchableMixin(object):
     @classmethod
     def search(cls, expression, page, per_page):
@@ -128,6 +116,19 @@ class SearchableMixin(object):
 
 db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+
+
+class Post(SearchableMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(140))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    language = db.Column(db.String(5))
+
+    __searchable__ = ['body']
+
+    def __repr__(self):
+        return '<Post {}>'.format(self.body)
 
 db.event.listen(db.session, 'before_commit', Post.before_commit)
 db.event.listen(db.session, 'after_commit', Post.after_commit)
